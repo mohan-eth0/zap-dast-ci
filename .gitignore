@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+zap-env/
+
+# ZAP outputs
+zap-report.html
+zap-alerts.json
+
+# OS noise
+.DS_Store
+
