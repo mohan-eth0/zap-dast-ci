@@ -1,0 +1,55 @@
+name: ZAP DAST Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  dast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start OWASP ZAP
+        run: |
+          docker run -d --name zap \
+            -p 8090:8090 \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -daemon \
+            -host 0.0.0.0 \
+            -port 8090 \
+            -config api.key=${{ secrets.ZAP_API_KEY }} \
+            -config api.addrs.addr.name=.* \
+            -config api.addrs.addr.regex=true
+
+      - name: Wait for ZAP
+        run: |
+          for i in {1..30}; do
+            curl -s http://127.0.0.1:8090/JSON/core/view/version/?apikey=${{ secrets.ZAP_API_KEY }} && break
+            sleep 2
+          done
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run ZAP DAST pipeline
+        env:
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+        run: |
+          bash scripts/run-all.sh
+
+      - name: Upload ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-dast-reports
+          path: scans/reports/
