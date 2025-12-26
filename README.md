@@ -38,22 +38,55 @@ This project automates OWASP ZAP to provide a practical, enforceable DAST workfl
 
 At a high level, the automation follows this flow:
 
-Python Scripts
-     │
-     │  (ZAP Python API – zapv2)
-     ▼
-HTTP Requests (urllib3 / requests)
-     │
-     │  REST API
-     ▼
-OWASP ZAP (Daemon Mode)
-     │
-     │  Proxy + Scanner
-     ▼
-Target Web / API Application
-     │
-     ▼
-Alerts → Security Gate → Reports
+Architecture Diagram:-
+
+
++--------------------+
+|   Python Scripts   |
+|  (Automation Flow) |
++---------+----------+
+          |
+          | ZAP Python API (zapv2)
+          v
++--------------------+
+| HTTP Requests      |
+| (urllib3 /         |
+|  requests)         |
++---------+----------+
+          |
+          | REST API
+          v
++--------------------+
+| OWASP ZAP          |
+| Daemon Mode        |
+| (Headless Scanner) |
++---------+----------+
+          |
+          | Proxy + Scanner
+          v
++--------------------+
+| Target Web / API   |
+| Application        |
++---------+----------+
+          |
+          v
++--------------------+
+| Alerts Collected   |
++---------+----------+
+          |
+          v
++--------------------+
+| Security Gate      |
+| (Fail on           |
+| High/Critical)     |
++---------+----------+
+          |
+          v
++--------------------+
+| Reports Generated  |
+| HTML / JSON / PDF  |
++--------------------+
+
 
 Step-by-Step Flow
 
@@ -87,7 +120,8 @@ zap-tests/
 ├── scans/
 │   └── reports/
 ├── seeds/
-└── zap-env/        # Python virtual environment (ignored in Git)
+└── zap-env/        # 
+
 
 Folder Responsibilities
 
@@ -229,6 +263,7 @@ Standardize DAST execution
 Produce audit-ready evidence
 
 Treat security findings as release criteria, not optional output
+
 
 👤 Author & Learning Journey
 
