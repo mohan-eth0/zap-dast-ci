@@ -41,51 +41,23 @@ At a high level, the automation follows this flow:
 Architecture Diagram:-
 
 
-+--------------------+
-|   Python Scripts   |
-|  (Automation Flow) |
-+---------+----------+
-          |
-          | ZAP Python API (zapv2)
-          v
-+--------------------+
-| HTTP Requests      |
-| (urllib3 /         |
-|  requests)         |
-+---------+----------+
-          |
-          | REST API
-          v
-+--------------------+
-| OWASP ZAP          |
-| Daemon Mode        |
-| (Headless Scanner) |
-+---------+----------+
-          |
-          | Proxy + Scanner
-          v
-+--------------------+
-| Target Web / API   |
-| Application        |
-+---------+----------+
-          |
-          v
-+--------------------+
-| Alerts Collected   |
-+---------+----------+
-          |
-          v
-+--------------------+
-| Security Gate      |
-| (Fail on           |
-| High/Critical)     |
-+---------+----------+
-          |
-          v
-+--------------------+
-| Reports Generated  |
-| HTML / JSON / PDF  |
-+--------------------+
+flowchart TD
+    A[Python Scripts<br/>(Automation Flow)]
+    B[ZAP Python API<br/>(zapv2)]
+    C[HTTP Requests<br/>(urllib3 / requests)]
+    D[OWASP ZAP<br/>Daemon Mode]
+    E[Target Web / API<br/>Application]
+    F[Alerts Collected]
+    G[Security Gate<br/>(Fail on High / Critical)]
+    H[Reports Generated<br/>HTML / JSON / PDF]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
 
 
 Step-by-Step Flow
@@ -110,17 +82,17 @@ Reports are generated
 
 Exit code determines CI/CD pass or fail
 
-📂 Project Structure
-zap-tests/
-├── README.md
-├── requirements.txt
-├── env.example
-├── scripts/
-├── src/
-├── scans/
-│   └── reports/
-├── seeds/
-└── zap-env/        # 
+flowchart TB
+    A[zap-tests/]
+    A --> B[README.md<br/>Documentation]
+    A --> C[requirements.txt<br/>Dependencies]
+    A --> D[env.example<br/>Env template]
+    A --> E[scripts/<br/>Scan orchestration]
+    A --> F[src/<br/>Python scan logic]
+    A --> G[scans/<br/>Scan artifacts]
+    G --> H[reports/<br/>HTML / JSON / PDF]
+    A --> I[seeds/<br/>API endpoint seeds]
+    A --> J[zap-env/<br/>Virtual environment]
 
 
 Folder Responsibilities
